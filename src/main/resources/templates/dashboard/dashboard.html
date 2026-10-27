@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link th:href="@{/webjars/bootstrap/5.3.8/dist/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/webjars/bootstrap-icons/1.13.2/font/bootstrap-icons.css}" rel="stylesheet">
+</head>
+<body>
+
+<div th:insert="~{fragments/header::header}"></div>
+
+<main>
+    <div class="container">
+        <div class="row justify-content-center p-0">
+            <div class="col-12 p-0">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Dashboard</h2>
+                    </div>
+
+                    <div class="card-body row g-2 mx-auto">
+                        <div class="col-4">
+                            <div class="card h-100 p-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-briefcase-fill fs-5"></i>
+                                    <span class="text-muted small fw-semibold">Total vacancies</span>
+                                </div>
+                                <span class="fs-4 fw-bold" th:text="${vacancies}"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="card h-100 p-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-building fs-5"></i>
+                                    <span class="text-muted small fw-semibold">Total companies</span>
+                                </div>
+                                <span class="fs-4 fw-bold" th:text="${companies}"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="card h-100 p-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-people-fill fs-5"></i>
+                                    <span class="text-muted small fw-semibold">Total users</span>
+                                </div>
+                                <span class="fs-4 fw-bold" th:text="${users}"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="card h-100 p-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-cash-stack fs-5"></i>
+                                    <span class="text-muted small fw-semibold">Average Salary</span>
+                                </div>
+                                <span class="fs-4 fw-bold" th:text="${averageSalary}"></span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card h-100 p-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-cash-stack fs-5"></i>
+                                    <span class="text-muted small fw-semibold">Max Salary</span>
+                                </div>
+                                <span class="fs-4 fw-bold" th:text="${maxSalary}"></span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card h-100 p-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-cash-stack fs-5"></i>
+                                    <span class="text-muted small fw-semibold">Min Salary</span>
+                                </div>
+                                <span class="fs-4 fw-bold" th:text="${minSalary}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-3 mt-3">
+                <div class="mb-2">
+                    <button id="topFiveCities" class="btn btn-outline-primary btn-sm mb-1">
+                        <i class="bi bi-geo-alt"></i>
+                        Get top five cities
+                    </button>
+
+                    <ul id="queryFiveCities"
+                        class="list-group list-group-flush d-none">
+                        <li th:each="stat : ${topFiveCities}"
+                            class="list-group-item d-flex justify-content-between">
+                            <span th:text="${stat.city}"></span>
+                            <span class="badge text-bg-light"
+                                  th:text="${stat.countVacancies}"></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <button id="topFiveCompanies" class="btn btn-outline-primary btn-sm mb-1">
+                        <i class="bi bi-building"></i>
+                        Get top five companies
+                    </button>
+
+                    <ul id="queryFiveCompanies"
+                        class="list-group list-group-flush d-none">
+                        <li th:each="companyStat : ${topFiveCompanies}"
+                            class="list-group-item d-flex justify-content-between">
+                            <span th:text="${companyStat.company}"></span>
+                            <span class="badge text-bg-light"
+                                  th:text="${companyStat.countVacancies}"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    document.getElementById("topFiveCities").addEventListener("click", function() {
+        document.getElementById("queryFiveCities").classList.toggle("d-none");
+    })
+
+    document.getElementById("topFiveCompanies").addEventListener("click", function() {
+        document.getElementById("queryFiveCompanies").classList.toggle("d-none");
+    })
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Companies</title>
+    <link th:href="@{/webjars/bootstrap/5.3.8/dist/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/webjars/bootstrap-icons/1.13.2/font/bootstrap-icons.css}" rel="stylesheet">
+</head>
+<body>
+<div th:insert="~{fragments/header::header}"></div>
+<div th:replace="~{fragments/confirm_modal::confirmModal}"></div>
+
+<main class="container">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h1 class="fw-bold mb-2">Companies</h1>
+            <p class="text-secondary mb-0">
+                Manage registered companies and their information.
+            </p>
+        </div>
+
+        <a th:href="@{/companies/new}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-2"></i>
+            Create company
+        </a>
+    </div>
+
+    <div th:if="${companies.isEmpty()}">
+        <i class="bi bi-building display-4"></i>
+        <h4 class="mt-3">No companies yet</h4>
+        <p class="mb-4">
+            Add your first company to start managing vacancies.
+        </p>
+        <a th:href="@{/companies/new}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-2"></i>
+            Create company
+        </a>
+    </div>
+
+    <div th:unless="${companies.isEmpty()}" class="row g-4">
+        <div class="col-12 col-md-6 col-xl-4"
+             th:each="company : ${companies}">
+            <div class="card p-4 d-flex flex-column">
+                <div class="d-flex align-items-start gap-3 mb-3">
+                    <div class="ui-icon">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <div class="flex-grow-1 min-w-0">
+                        <h5 class="fw-bold mb-1"
+                            th:text="${company.name}">
+                            Company name
+                        </h5>
+                        <div class="small">
+                            <i class="bi bi-people me-1"></i>
+                            <span th:text="${company.quantityEmployees}"></span>
+                        </div>
+                    </div>
+                </div>
+                <p class="flex-grow-1 mb-4" th:text="${company.description}"></p>
+                <div class="d-flex flex-wrap gap-2 pt-3 border-top">
+                    <a th:href="@{/companies/detail/{id}(id=${company.id})}"
+                       class="btn btn-outline-primary btn-sm flex-grow-1">
+                        <i class="bi bi-eye me-1"></i>
+                        View
+                    </a>
+                    <a th:href="@{/companies/update/{id}(id=${company.id})}"
+                       class="btn btn-outline-secondary btn-sm flex-grow-1">
+                        <i class="bi bi-pencil me-1"></i>
+                        Edit
+                    </a>
+                    <button type="button"
+                            class="btn btn-outline-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#confirmModal"
+                            th:onclick="|setActionInModal('@{/companies/delete/{id}(id=${company.id})}')|"
+                            th:attr="aria-label=|Delete ${company.name}|">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script th:src="@{/webjars/bootstrap/5.3.8/dist/js/bootstrap.bundle.min.js}"></script>
+<script>
+    setActionInModal = (url) => {
+        const form = document.getElementById("confirmForm");
+
+        form.action = url;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Vacancy</title>
+    <link th:href="@{/webjars/bootstrap/5.3.8/dist/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/webjars/bootstrap-icons/1.13.2/font/bootstrap-icons.css}" rel="stylesheet">
+</head>
+<body>
+<div th:insert="~{fragments/header::header}"></div>
+<main class="container">
+    <div class="mb-4">
+        <a th:href="@{/vacancies}"
+           class="text-decoration-none small">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to vacancies
+        </a>
+
+        <h1 class="fw-bold mt-3 mb-2">Update vacancy</h1>
+        <p class="mb-0">
+            Edit the vacancy details and save your changes.
+        </p>
+    </div>
+
+    <form th:action="@{/vacancies/save}"
+          method="post"
+          th:object="${vacancy}"
+          class="card p-3">
+
+        <div class="header-panel">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-3 p-3">
+                    <i class="bi bi-briefcase fs-4"></i>
+                </div>
+
+                <div>
+                    <h5 class="mb-1">Vacancy information</h5>
+                    <p class="small mb-0">
+                        Update the main information about this position.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="row g-4">
+                <div class="col-12">
+                    <label for="title" class="form-label">
+                        <i class="bi bi-card-heading"></i>
+                        Job title
+                    </label>
+                    <input type="text"
+                           class="form-control"
+                           id="title"
+                           th:field="*{title}"
+                           placeholder="e.g. Java Developer"
+                           required
+                           maxlength="255">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="city" class="form-label">
+                        <i class="bi bi-geo-alt field-icon"></i>
+                        City
+                    </label>
+                    <input type="text"
+                           class="form-control"
+                           id="city"
+                           th:field="*{city}"
+                           placeholder="e.g. Mykolaiv"
+                           maxlength="50">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="salary" class="form-label">
+                        <i class="bi bi-currency-dollar"></i>
+                        Salary
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light">₴</span>
+                        <input type="number"
+                               class="form-control"
+                               id="salary"
+                               th:field="*{salary}"
+                               placeholder="30000.00"
+                               min="0"
+                               step="0.01">
+                    </div>
+                    <div class="form-text">
+                        Enter the monthly salary in UAH.
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label for="description" class="form-label">
+                        <i class="bi bi-text-paragraph field-icon"></i>
+                        Description
+                    </label>
+                    <textarea class="form-control"
+                              id="description"
+                              th:field="*{description}"
+                              placeholder="Describe the responsibilities, requirements and benefits..."
+                              rows="5"></textarea>
+                </div>
+
+                <div class="col-12">
+                    <label for="company" class="form-label">
+                        <i class="bi bi-building field-icon"></i>
+                        Company
+                    </label>
+                    <select class="form-select"
+                            id="company"
+                            th:field="*{company}"
+                            required>
+                        <option value="" disabled>Select a company</option>
+                        <option th:each="company : ${companies}"
+                                th:value="${company.id}"
+                                th:text="${company.name}">
+                        </option>
+                    </select>
+                    <div class="form-text">
+                        Choose the company that owns this vacancy.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <a th:href="@{/vacancies}"
+               class="btn btn-outline-secondary">
+                <i class="bi bi-x-lg me-1"></i>
+                Cancel
+            </a>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check2-circle me-1"></i>
+                Save changes
+            </button>
+        </div>
+    </form>
+</main>
+</body>
+</html>

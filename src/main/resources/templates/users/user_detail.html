@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Detail</title>
+    <link th:href="@{/webjars/bootstrap/5.3.8/dist/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.13.2/font/bootstrap-icons.css}">
+</head>
+<body>
+<div th:insert="~{fragments/header::header}"></div>
+
+<main class="container">
+    <a th:href="@{/users}"
+       class="text-decoration-none small">
+        <i class="bi bi-arrow-left me-1"></i>
+        Back to users
+    </a>
+
+    <section class="card mt-3 mb-4">
+        <div class="card-header d-flex align-items-center gap-3">
+            <div class="profile-avatar">
+                <i class="bi bi-person"></i>
+            </div>
+
+            <div class="card-body flex-grow-1">
+                <div class="small mb-1">
+                    User Profile
+                </div>
+
+                <h1 class="fw-bold mb-1"
+                    th:text="${user.firstName + ' ' + user.lastName}">
+                    Firstname Lastname
+                </h1>
+
+                <div class="text-secondary small">
+                    <i class="bi bi-hash me-1"></i>
+                    User ID:
+                    <span th:text="${user.id}">1</span>
+                </div>
+            </div>
+
+            <a th:href="@{/users/{id}(id=${user.id})}"
+               class="btn btn-outline-primary d-none d-sm-inline-block">
+                <i class="bi bi-pencil me-1"></i>
+                Edit user
+            </a>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <div>
+                        <div class="label">
+                            <i class="bi bi-envelope me-1"></i>
+                            Email address
+                        </div>
+                        <div class="fw-semibold" th:text="${user.email}"/>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div>
+                        <div class="label">
+                            <i class="bi bi-calendar3 me-1"></i>
+                            Registration date
+                        </div>
+                        <div th:text="${user.createdAt}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="row g-4">
+        <div class="col-12 col-lg-7">
+            <section class="card overflow-auto" style="max-height: 500px;">
+                <div class="header-panel p-3">
+                    <div>
+                        <h2 class="h5 fw-bold mb-1">
+                            <i class="bi bi-bookmark-star text-primary me-2"></i>
+                            Saved vacancies
+                        </h2>
+                        <p class="text-secondary small mb-0">
+                            Vacancies saved by this user.
+                        </p>
+                    </div>
+                </div>
+
+                <div th:if="${user.vacancies.isEmpty()}"
+                     class="text-center py-4">
+                    <i class="bi bi-bookmark display-5"></i>
+                    <h6 class="mt-3">No saved vacancies</h6>
+                    <p class="small mb-0">
+                        Save vacancies using the star button to see them here.
+                    </p>
+                </div>
+                <div th:each="vacancy : ${user.vacancies}" class="card p-2 m-2">
+
+                    <div class="d-flex justify-content-between gap-3">
+                        <div class="flex-grow-1">
+                            <a th:href="@{/vacancies/detail/{id}(id=${vacancy.id})}"
+                               class="title text-decoration-none text-dark title"
+                               th:text="${vacancy.title}">
+                                Vacancy title
+                            </a>
+
+                            <div class="small mt-2">
+                                <i class="bi bi-building me-1"></i>
+                                <span th:text="${vacancy.company.name}">
+                                    Company
+                                </span>
+                            </div>
+
+                            <div class="small mt-1">
+                                <i class="bi me-1"></i>
+                                <span th:text="${vacancy.city}"></span>
+                            </div>
+
+                            <div class="text-success mt-3" th:if="${vacancy.salary != null}">
+                                <span th:text="${vacancy.salary}"></span>
+                            </div>
+                        </div>
+
+                        <a th:href="@{/vacancies/detail/{id}(id=${vacancy.id})}"
+                           class="btn btn-light align-self-start">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <button type="button"
+                        class="btn btn-primary w-100 mt-4"
+                        data-bs-toggle="modal"
+                        data-bs-target="#vacancyModal">
+                    <i class="bi bi-plus-lg me-2"></i>
+                    Saved vacancies
+                </button>
+            </section>
+        </div>
+        <div class="col-12 col-lg-5">
+            <section class="card p-3">
+                <div class="header-panel">
+                    <div>
+                        <h2 class="h5 fw-bold mb-1">
+                            <i class="bi bi-buildings text-primary me-2"></i>
+                            User companies
+                        </h2>
+                        <p class="text-secondary small mb-0">
+                            Companies associated with this user.
+                        </p>
+                    </div>
+                </div>
+
+                <div th:if="${user.companies.isEmpty()}"
+                     class="text-center py-4">
+                    <i class="bi bi-building display-5"></i>
+                    <h6 class="mt-3">No companies</h6>
+                    <p class="small mb-0">
+                        This user is not associated with any companies.
+                    </p>
+                </div>
+
+                <div th:each="company : ${user.companies}"
+                     class="card p-2 mb-2">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="rounded-3 d-flex align-items-center justify-content-center"
+                             style="width: 44px; height: 44px; flex-shrink: 0;">
+                            <i class="bi bi-building fs-5"></i>
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <h3 class="h6 fw-bold mb-1"
+                                th:text="${company.name}">
+                                Company name
+                            </h3>
+
+                            <div class="small mb-2">
+                                <i class="bi bi-people me-1"></i>
+                                <span th:if="${company.quantityEmployees != null}"
+                                      th:text="${company.quantityEmployees}">
+                                </span>
+                                <span th:unless="${company.quantityEmployees != null}">
+                                    Employee count not specified
+                                </span>
+                            </div>
+
+                            <p class="small description-text mb-3"
+                               th:text="${company.description}"></p>
+
+                            <a th:href="@{/companies/detail/{id}(id=${company.id})}"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye me-1"></i>
+                                View company
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+
+<div class="modal fade"
+     id="vacancyModal"
+     tabindex="-1"
+     aria-labelledby="vacancyModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="vacancyModalLabel">
+                    Available Vacancies
+                </h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+            <div class="pt-2 mx-auto" th:if="${vacancies.isEmpty()}">Don't have any vacancies now!</div>
+            <div class="modal-body">
+                <div th:each="vacancy : ${vacancies}" class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0"
+                            th:text="${vacancy.title}">
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            <strong>Company:</strong>
+                            <span th:text="${vacancy.company.name}"></span>
+                        </p>
+                        <p>
+                            <strong>Salary:</strong>
+                            <span th:text="${vacancy.salary}"></span>
+                        </p>
+                        <p>
+                            <strong>City:</strong>
+                            <span th:text="${vacancy.city}"></span>
+                        </p>
+                        <p th:text="${vacancy.description}"></p>
+                    </div>
+                    <div class="card-footer text-end">
+                        <form class="saveVacancy">
+                            <input type="hidden"
+                                   name="vacancyId"
+                                   th:value="${vacancy.id}">
+                            <input type="hidden"
+                                   name="userId"
+                                   th:value="${user.id}">
+                            <button type="submit" class="btn btn-warning">
+                                <i th:if="${!user.vacancies.contains(vacancy)}"
+                                   class="bi bi-star"></i>
+                                <i th:if="${user.vacancies.contains(vacancy)}"
+                                   class="bi bi-star-fill"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button data-bs-dismiss="modal"
+                        class="btn btn-secondary">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/5.3.8/dist/js/bootstrap.bundle.min.js}"></script>
+<script>
+    document.querySelectorAll(".saveVacancy").forEach(form => {
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const userId = form.querySelector('[name="userId"]').value;
+            const vacancyId = form.querySelector('[name="vacancyId"]').value;
+
+            const response = await fetch("/users/save-list", {
+                method: "POST",
+                body: new URLSearchParams({
+                    userId: userId,
+                    vacancyId: vacancyId
+                })
+            });
+
+            if (response.ok) {
+                const icon = form.querySelector("i");
+                if (icon.classList.contains("bi-star")) {
+                    icon.classList.replace("bi-star", "bi-star-fill");
+                } else {
+                    icon.classList.replace("bi-star-fill", "bi-star");
+                }
+
+            } else {
+                console.error("Error:", response.status);
+            }
+        });
+    });
+
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('hidden.bs.modal', () => {
+            window.location.reload();
+        });
+    });
+
+    setActionInModal = (url) => {
+        const form = document.getElementById("confirmForm");
+
+        form.action = url;
+    }
+</script>
+</body>
+</html>

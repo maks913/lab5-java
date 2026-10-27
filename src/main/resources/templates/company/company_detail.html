@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Detail</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.8/dist/css/bootstrap.min.css}">
+    <link th:href="@{/webjars/bootstrap-icons/1.13.2/font/bootstrap-icons.css}" rel="stylesheet">
+</head>
+<body>
+<div th:insert="~{fragments/header::header}"></div>
+<div th:replace="~{fragments/confirm_modal::confirmModal}"></div>
+
+<main class="container">
+    <a th:href="@{/companies}"
+       class="text-decoration-none small">
+        <i class="bi bi-arrow-left me-1"></i>
+        Back to companies
+    </a>
+
+    <div class="card mt-3 p-3">
+        <div class="d-flex align-items-center gap-4">
+            <div class="ui-icon">
+                <i class="bi bi-building"></i>
+            </div>
+
+            <div class="flex-grow-1">
+                <div class="small mb-2">
+                    Company Details
+                </div>
+                <h1 class="mb-2"
+                    th:text="${company.name}">
+                    Company name
+                </h1>
+                <div class="small">
+                    <i class="bi bi-hash me-1"></i>
+                    Company ID:
+                    <span th:text="${company.id}">1</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <section class="mb-5">
+                <h2 class="title">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Company information
+                </h2>
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div>
+                            <div class="info-label">
+                                <i class="bi bi-people me-1"></i>
+                                Employees
+                            </div>
+                            <div th:text="${company.quantityEmployees}"></div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div>
+                            <div class="label">
+                                <i class="bi bi-calendar3 me-1"></i>
+                                Created at
+                            </div>
+                            <div class="info-value" th:text="${company.createdAt}"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h3 class="mb-2">Description</h3>
+
+                    <p class="mb-0"
+                       th:text="${company.description}">
+                        Company description
+                    </p>
+                </div>
+            </section>
+            <hr class="opacity-25 mb-4">
+            <section class="mb-4">
+                <h2>
+                    <i class="bi bi-person-circle me-2"></i>
+                    Contact person
+                </h2>
+
+                <div class="d-flex flex-column flex-sm-rowlign-items-sm-center gap-3">
+                    <div class="flex-grow-1">
+                        <div th:text="${company.user.firstName + ' ' + company.user.lastName}"></div>
+                        <div class="small">
+                            Company owner / contact person
+                        </div>
+                    </div>
+
+                    <a th:href="@{/users/detail/{id}(id=${company.user.id})}"
+                       class="btn btn-outline-primary action-btn">
+                        <i class="bi bi-person-lines-fill me-1"></i>
+                        View user
+                    </a>
+                </div>
+            </section>
+            <section class="mb-4" th:if="${company.vacancies != null}">
+                <div class="list-group">
+                    <a th:each="vacancy : ${company.vacancies}"
+                       th:href="@{/vacancies/detail/{id}(id=${vacancy.id})}"
+                       class="d-flex flex-row justify-content-between align-items-center gap-3 py-3">
+                        <div>
+                            <div th:text="${vacancy.title}"> </div>
+
+                            <div class="small mt-1">
+                                <i class="bi bi-geo-alt me-1"></i>
+                                <span th:text="${vacancy.city}"></span>
+                            </div>
+                        </div>
+                        <i class="bi bi-chevron-righ "></i>
+                    </a>
+                </div>
+            </section>
+            <div class="d-flex flex-row justify-content-between align-items-center gap-3">
+                <a th:href="@{/companies}"
+                   class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>
+                    All companies
+                </a>
+
+                <div class="d-flex gap-2">
+                    <button type="button"
+                            class="btn btn-outline-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#confirmModal"
+                            th:onclick="|setActionInModal('@{/companies/delete/{id}(id=${company.id})}')|">
+                        <i class="bi bi-trash me-1"></i>
+                        Delete
+                    </button>
+
+                    <a th:href="@{/companies/update/{id}(id=${company.id})}"
+                       class="btn btn-primary">
+                        <i class="bi bi-pencil-square me-1"></i>
+                        Edit company
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<script th:src="@{/webjars/bootstrap/5.3.8/dist/js/bootstrap.bundle.min.js}"></script>
+<script>
+    setActionInModal = (url) => {
+        const form = document.getElementById("confirmForm");
+
+        form.action = url;
+    }
+</script>
+</body>
+</html>
