@@ -36,7 +36,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "vacancies_id"))
     private List<Vacancy> vacancies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Company> companies = new ArrayList<>();
 
 }
